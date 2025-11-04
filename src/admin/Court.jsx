@@ -1,64 +1,56 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import '../styles/Team.css';
+import '../styles/Court.css';
 
-const API_URL = "http://localhost:8080/equipo";
+const API_URL = "http://localhost:8080/cancha";
 
-const equipoVacio = {
-    idEquipo: null,
+const canchaVacia = {
+    idCancha: null,
     nombre: "",
-    directorTecnico: "",
-    colorPrimario: "#000000",
-    colorSecundario: "#FFFFFF",
+    direccion: "",
 };
 
-const GestionEquipos = () => {
+const GestionCanchas = () => {
     const navigate = useNavigate();
-    document.title = 'Gestión de Equipos - BogotáCup';
+    document.title = 'Gestión de Canchas - BogotáCup';
 
-    const [equipos, setEquipos] = useState([]);
+    const [canchas, setCanchas] = useState([]);
     const [mostrarFormulario, setMostrarFormulario] = useState(false);
     const [modoEdicion, setModoEdicion] = useState(false);
-    const [equipoActual, setEquipoActual] = useState(equipoVacio);
+    const [canchaActual, setCanchaActual] = useState(canchaVacia);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [apiMessage, setApiMessage] = useState("");
 
-    const fetchEquipos = async () => {
+    const fetchCanchas = async () => {
         try {
             setLoading(true);
-            const cacheBust = `_=${new Date().getTime()}`;
-            const response = await axios.get(`${API_URL}/listar?${cacheBust}`);
-
-            if (Array.isArray(response.data)) {
-                setEquipos(response.data);
-            } else {
-                setEquipos([]);
-            }
+            const response = await axios.get(`${API_URL}/listar`);
+            setCanchas(response.data || []);
             setError(null);
         } catch (err) {
-            setError("Error al cargar los equipos. El backend puede estar inactivo.");
-            setEquipos([]);
+            setError("Error al cargar las canchas. El backend puede estar inactivo.");
+            setCanchas([]);
         } finally {
             setLoading(false);
         }
     };
 
     useEffect(() => {
-        fetchEquipos();
+        fetchCanchas();
     }, []);
 
     const handleCrearClick = () => {
         setModoEdicion(false);
-        setEquipoActual(equipoVacio);
+        setCanchaActual(canchaVacia);
         setMostrarFormulario(true);
         setApiMessage("");
     };
 
-    const handleEditarClick = (equipo) => {
+    const handleEditarClick = (cancha) => {
         setModoEdicion(true);
-        setEquipoActual(equipo);
+        setCanchaActual(cancha);
         setMostrarFormulario(true);
         setApiMessage("");
     };
@@ -70,7 +62,7 @@ const GestionEquipos = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setEquipoActual(prev => ({
+        setCanchaActual(prev => ({
             ...prev,
             [name]: value
         }));
@@ -80,51 +72,32 @@ const GestionEquipos = () => {
         e.preventDefault();
         setApiMessage("Guardando...");
 
-        const equipoPayload = {
-            idEquipo: equipoActual.idEquipo,
-            nombre: equipoActual.nombre,
-            directorTecnico: equipoActual.directorTecnico,
-            colorPrimario: equipoActual.colorPrimario,
-            colorSecundario: equipoActual.colorSecundario
-        };
-
-        const config = {
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        };
+        const params = new URLSearchParams();
+        params.append('nombre', canchaActual.nombre);
+        params.append('direccion', canchaActual.direccion);
 
         try {
             if (modoEdicion) {
-                await axios.put(`${API_URL}/actualizar/${equipoPayload.idEquipo}`, equipoPayload, config);
+                await axios.put(`${API_URL}/actualizar/${canchaActual.idCancha}`, params);
             } else {
-                await axios.post(`${API_URL}/crear`, equipoPayload, config);
+                await axios.post(`${API_URL}/crear`, params);
             }
             setMostrarFormulario(false);
             setApiMessage("");
-            fetchEquipos();
+            fetchCanchas();
         } catch (err) {
-            let errorMsg = "Error al guardar el equipo.";
-            if (err.response && err.response.data) {
-                if (typeof err.response.data === 'string') {
-                    errorMsg = err.response.data;
-                } else if (err.response.data.message) {
-                    errorMsg = err.response.data.message;
-                } else {
-                    errorMsg = JSON.stringify(err.response.data);
-                }
-            }
+            const errorMsg = err.response?.data || "Error al guardar la cancha.";
             setApiMessage(`Error: ${errorMsg}`);
         }
     };
 
-    const handleEliminarClick = async (idEquipo) => {
-        if (window.confirm("¿Está seguro de eliminar este equipo?")) {
+    const handleEliminarClick = async (idCancha) => {
+        if (window.confirm("¿Está seguro de eliminar esta cancha?")) {
             try {
-                await axios.delete(`${API_URL}/eliminar/${idEquipo}`);
-                fetchEquipos();
+                await axios.delete(`${API_URL}/eliminar/${idCancha}`);
+                fetchCanchas();
             } catch (err) {
-                alert("Error al eliminar el equipo.");
+                alert("Error al eliminar la cancha.");
             }
         }
     };
@@ -146,7 +119,7 @@ const GestionEquipos = () => {
                             </Link>
                         </li>
                         <li>
-                            <Link to="/dashboard/team" className="active">
+                            <Link to="/dashboard/team">
                                 <span className="icon">🛡️</span> Equipos
                             </Link>
                         </li>
@@ -166,7 +139,7 @@ const GestionEquipos = () => {
                             </Link>
                         </li>
                         <li>
-                            <Link to="/dashboard/court">
+                            <Link to="/dashboard/court" className="active">
                                 <span className="icon">🏟️</span> Canchas
                             </Link>
                         </li>
@@ -181,64 +154,42 @@ const GestionEquipos = () => {
 
             <main className="main-content">
                 <div className="main-header">
-                    <h2>Gestión de Equipos</h2>
+                    <h2>Gestión de Canchas</h2>
                     {!mostrarFormulario && (
                         <button className="btn btn-primary" onClick={handleCrearClick}>
-                            + Crear Equipo
+                            + Crear Cancha
                         </button>
                     )}
                 </div>
 
                 {mostrarFormulario && (
                     <div className="content-card">
-                        <h3>{modoEdicion ? "Editar Equipo" : "Crear Nuevo Equipo"}</h3>
+                        <h3>{modoEdicion ? "Editar Cancha" : "Crear Nueva Cancha"}</h3>
                         <form className="form-gestion" onSubmit={handleGuardarSubmit}>
 
-                            {apiMessage && <p style={{ color: apiMessage.startsWith("Error") ? 'red' : 'green' }}>{apiMessage}</p>}
+                            {apiMessage && <p>{apiMessage}</p>}
 
                             <div className="form-group">
-                                <label htmlFor="nombre">Nombre del Equipo</label>
+                                <label htmlFor="nombre">Nombre</label>
                                 <input
                                     type="text"
                                     id="nombre"
                                     name="nombre"
-                                    value={equipoActual.nombre}
+                                    value={canchaActual.nombre}
                                     onChange={handleChange}
                                     required
                                 />
                             </div>
 
                             <div className="form-group">
-                                <label htmlFor="directorTecnico">Director Técnico</label>
+                                <label htmlFor="direccion">Dirección</label>
                                 <input
                                     type="text"
-                                    id="directorTecnico"
-                                    name="directorTecnico"
-                                    value={equipoActual.directorTecnico}
+                                    id="direccion"
+                                    name="direccion"
+                                    value={canchaActual.direccion}
                                     onChange={handleChange}
                                     required
-                                />
-                            </div>
-
-                            <div className="form-group">
-                                <label htmlFor="colorPrimario">Color Primario</label>
-                                <input
-                                    type="color"
-                                    id="colorPrimario"
-                                    name="colorPrimario"
-                                    value={equipoActual.colorPrimario}
-                                    onChange={handleChange}
-                                />
-                            </div>
-
-                            <div className="form-group">
-                                <label htmlFor="colorSecundario">Color Secundario</label>
-                                <input
-                                    type="color"
-                                    id="colorSecundario"
-                                    name="colorSecundario"
-                                    value={equipoActual.colorSecundario}
-                                    onChange={handleChange}
                                 />
                             </div>
 
@@ -256,7 +207,7 @@ const GestionEquipos = () => {
 
                 {!mostrarFormulario && (
                     <div className="content-card">
-                        {loading && <p>Cargando equipos...</p>}
+                        {loading && <p>Cargando canchas...</p>}
                         {error && <p style={{ color: 'red' }}>{error}</p>}
                         {!loading && !error && (
                             <div className="tabla-gestion-container">
@@ -265,41 +216,27 @@ const GestionEquipos = () => {
                                     <tr>
                                         <th>ID</th>
                                         <th>Nombre</th>
-                                        <th>Director Técnico</th>
-                                        <th>Colores</th>
+                                        <th>Dirección</th>
                                         <th>Acciones</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {equipos.length > 0 ? (
-                                        equipos.map((equipo) => (
-                                            <tr key={equipo.idEquipo}>
-                                                <td>{equipo.idEquipo}</td>
-                                                <td>{equipo.nombre}</td>
-                                                <td>{equipo.directorTecnico}</td>
-                                                <td>
-                                                    <span style={{
-                                                        display: 'inline-block',
-                                                        width: '20px',
-                                                        height: '20px',
-                                                        backgroundColor: equipo.colorPrimario,
-                                                        border: `2px solid ${equipo.colorSecundario}`,
-                                                        borderRadius: '4px',
-                                                        marginRight: '8px',
-                                                        verticalAlign: 'middle'
-                                                    }}></span>
-                                                    {equipo.colorPrimario} / {equipo.colorSecundario}
-                                                </td>
+                                    {canchas.length > 0 ? (
+                                        canchas.map((cancha) => (
+                                            <tr key={cancha.idCancha}>
+                                                <td>{cancha.idCancha}</td>
+                                                <td>{cancha.nombre}</td>
+                                                <td>{cancha.direccion}</td>
                                                 <td className="acciones">
                                                     <button
                                                         className="btn btn-edit"
-                                                        onClick={() => handleEditarClick(equipo)}
+                                                        onClick={() => handleEditarClick(cancha)}
                                                     >
                                                         Editar
                                                     </button>
                                                     <button
                                                         className="btn btn-danger"
-                                                        onClick={() => handleEliminarClick(equipo.idEquipo)}
+                                                        onClick={() => handleEliminarClick(cancha.idCancha)}
                                                     >
                                                         Eliminar
                                                     </button>
@@ -308,7 +245,7 @@ const GestionEquipos = () => {
                                         ))
                                     ) : (
                                         <tr>
-                                            <td colSpan="5">No hay equipos registrados.</td>
+                                            <td colSpan="4">No hay canchas registradas.</td>
                                         </tr>
                                     )}
                                     </tbody>
@@ -322,5 +259,4 @@ const GestionEquipos = () => {
     );
 };
 
-export default GestionEquipos;
-
+export default GestionCanchas;

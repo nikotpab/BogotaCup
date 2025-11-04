@@ -128,32 +128,32 @@ const GestionTorneos = () => {
                             </Link>
                         </li>
                         <li>
-                            <Link to="/admin/dashboard/equipos">
+                            <Link to="/dashboard/team">
                                 <span className="icon">🛡️</span> Equipos
                             </Link>
                         </li>
                         <li>
-                            <Link to="/admin/dashboard/jugadores">
+                            <Link to="/dashboard/player">
                                 <span className="icon">🏃</span> Jugadores
                             </Link>
                         </li>
                         <li>
-                            <Link to="/admin/dashboard/partidos">
+                            <Link to="/dashboard/game">
                                 <span className="icon">⚽</span> Partidos
                             </Link>
                         </li>
                         <li>
-                            <Link to="/admin/dashboard/arbitros">
+                            <Link to="/dashboard/referee">
                                 <span className="icon">⚖️</span> Árbitros
                             </Link>
                         </li>
                         <li>
-                            <Link to="/admin/dashboard/canchas">
+                            <Link to="/dashboard/court">
                                 <span className="icon">🏟️</span> Canchas
                             </Link>
                         </li>
                         <li>
-                            <Link to="/admin/dashboard/usuarios">
+                            <Link to="/dashboard/user">
                                 <span className="icon">👥</span> Usuarios
                             </Link>
                         </li>

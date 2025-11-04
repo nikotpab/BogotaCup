@@ -1,0 +1,397 @@
+@import url("https://fonts.googleapis.com/css?family=Montserrat:400,600,700,800");
+
+:root {
+    --grad-a: #ff4b2b;
+    --grad-b: #ff416c;
+    --text-1: #222;
+    --text-2: #666;
+    --bg-0: #f6f5f7;
+    --bg-1: #ffffff;
+    --card: #ffffff;
+    --muted: #dddddd;
+    --danger: #e74c3c;
+    --success: #27ae60;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: "Montserrat", sans-serif;
+    background-color: var(--bg-0);
+    color: var(--text-1);
+    line-height: 1.6;
+}
+
+/* --- Loading State --- */
+.user-homepage-loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-2);
+}
+
+/* --- Container Principal --- */
+.user-homepage-container {
+    min-height: 100vh;
+    background-color: var(--bg-0);
+}
+
+/* --- Header --- */
+.user-header {
+    background: var(--bg-1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 14px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.user-header-logo {
+    font-weight: 800;
+    font-size: 20px;
+    background: linear-gradient(to right, var(--grad-a), var(--grad-b));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.user-nav {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.user-nav a {
+    text-decoration: none;
+    color: var(--text-2);
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.3px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.user-nav a:hover,
+.user-nav a.active {
+    color: var(--grad-a);
+    background-color: #fff3e5;
+}
+
+.btn-logout {
+    padding: 6px 16px;
+    border: 1px solid var(--grad-a);
+    border-radius: 6px;
+    background: transparent;
+    color: var(--grad-a);
+    font-weight: 700;
+    font-size: 12px;
+    font-family: "Montserrat", sans-serif;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    letter-spacing: 0.3px;
+}
+
+.btn-logout:hover {
+    background: linear-gradient(to right, var(--grad-a), var(--grad-b));
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(255, 75, 43, 0.3);
+}
+
+/* --- Main Content --- */
+.user-main-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px 20px;
+}
+
+.user-main-content h1 {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--text-1);
+    margin-bottom: 6px;
+}
+
+.user-subtitle {
+    font-size: 14px;
+    color: var(--text-2);
+    margin-bottom: 24px;
+}
+
+/* --- Grid Container --- */
+.user-grid-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+}
+
+/* --- Cards --- */
+.user-card {
+    background: var(--card);
+    border: 1px solid var(--muted);
+    border-radius: 10px;
+    padding: 28px;
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.user-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+.user-card h3 {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--text-1);
+    margin-bottom: 16px;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.user-card h3::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 50px;
+    height: 3px;
+    background: linear-gradient(to right, var(--grad-a), var(--grad-b));
+    border-radius: 2px;
+}
+
+.large-card {
+    grid-column: span 2;
+}
+
+/* --- User Info List --- */
+.user-info-list {
+    list-style: none;
+    padding: 0;
+}
+
+.user-info-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--muted);
+}
+
+.user-info-list li:last-child {
+    border-bottom: none;
+}
+
+.user-info-list li span {
+    font-size: 13px;
+    color: var(--text-2);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.user-info-list li strong {
+    font-size: 14px;
+    color: var(--text-1);
+    font-weight: 700;
+}
+
+/* --- Team List --- */
+.user-team-list {
+    list-style: none;
+    padding: 0;
+}
+
+.user-team-list li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    background-color: #fcfcfc;
+    border: 1px solid var(--muted);
+    transition: all 0.2s ease;
+}
+
+.user-team-list li:hover {
+    background-color: #fff3e5;
+    border-color: var(--grad-a);
+}
+
+.team-color {
+    width: 40px;
+    height: 40px;
+    border-radius: 6px;
+    border: 2px solid;
+    flex-shrink: 0;
+}
+
+.team-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.team-info strong {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-1);
+}
+
+.team-info span {
+    font-size: 12px;
+    color: var(--text-2);
+}
+
+.user-team-list p {
+    color: var(--text-2);
+    font-style: italic;
+    text-align: center;
+    padding: 20px;
+}
+
+/* --- Match List --- */
+.match-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.match-item {
+    display: grid;
+    grid-template-columns: 100px 1fr auto;
+    gap: 12px;
+    align-items: center;
+    padding: 12px;
+    border-radius: 6px;
+    border: 1px solid var(--muted);
+    transition: all 0.2s ease;
+}
+
+.match-item.upcoming {
+    background: linear-gradient(135deg, #fff3e5 0%, #fef3e8 100%);
+    border-color: var(--grad-a);
+}
+
+.match-item.played {
+    background-color: #fcfcfc;
+}
+
+.match-item:hover {
+    transform: translateX(4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.match-date {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-1);
+    letter-spacing: 0.3px;
+}
+
+.match-stadium {
+    font-size: 13px;
+    color: var(--text-2);
+}
+
+.match-teams {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-1);
+    text-align: right;
+}
+
+.match-score {
+    font-size: 13px;
+    text-align: right;
+}
+
+.match-score strong {
+    font-size: 16px;
+    font-weight: 800;
+    background: linear-gradient(to right, var(--grad-a), var(--grad-b));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.match-list p {
+    color: var(--text-2);
+    font-style: italic;
+    text-align: center;
+    padding: 20px;
+}
+
+/* --- Responsividad --- */
+@media (max-width: 992px) {
+    .user-grid-container {
+        grid-template-columns: 1fr;
+    }
+
+    .large-card {
+        grid-column: span 1;
+    }
+}
+
+@media (max-width: 768px) {
+    .user-header {
+        flex-direction: column;
+        gap: 16px;
+        padding: 16px 20px;
+    }
+
+    .user-nav {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 12px;
+        width: 100%;
+    }
+
+    .user-nav a {
+        font-size: 12px;
+        padding: 6px 12px;
+    }
+
+    .btn-logout {
+        width: 100%;
+        text-align: center;
+    }
+
+    .user-main-content {
+        padding: 24px 16px;
+    }
+
+    .user-main-content h1 {
+        font-size: 28px;
+    }
+
+    .user-subtitle {
+        font-size: 14px;
+    }
+
+    .user-card {
+        padding: 20px;
+    }
+
+    .match-item {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    .match-teams,
+    .match-score {
+        text-align: left;
+    }
+}

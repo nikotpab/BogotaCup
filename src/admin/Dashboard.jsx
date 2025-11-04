@@ -36,7 +36,7 @@ const Dashboard = () => {
 
         partidos.forEach(p => {
             if (p.estado !== 'Jugado') return;
-            const fecha = new Date(p.fecha_partido);
+            const fecha = new Date(p.fecha_partido || p.fecha);
             if (isNaN(fecha.getTime())) return;
 
             const mesIndex = fecha.getMonth();
@@ -107,6 +107,11 @@ const Dashboard = () => {
         fetchData();
     }, []);
 
+    const handleLogout = () => {
+        localStorage.removeItem("userEmail");
+        navigate("/");
+    };
+
     if (loading) {
         return <div className="dashboard-container" style={{ padding: '2rem' }}>Cargando datos...</div>;
     }
@@ -118,46 +123,58 @@ const Dashboard = () => {
     return (
         <div className="dashboard-container">
             <aside className="sidebar">
-                <h2>BogotáCup</h2>
-                <nav>
-                    <ul>
-                        <li>
-                            <Link to="/dashboard/tournament">
-                                <span className="icon">🏆</span> Torneos
-                            </Link>
-                        </li>
-                        <li>
-                            <Link to="/dashboard/team">
-                                <span className="icon">🛡️</span> Equipos
-                            </Link>
-                        </li>
-                        <li>
-                            <Link to="/admin/dashboard/jugadores">
-                                <span className="icon">🏃</span> Jugadores
-                            </Link>
-                        </li>
-                        <li>
-                            <Link to="/admin/dashboard/partidos">
-                                <span className="icon">⚽</span> Partidos
-                            </Link>
-                        </li>
-                        <li>
-                            <Link to="/admin/dashboard/arbitros">
-                                <span className="icon">⚖️</span> Árbitros
-                            </Link>
-                        </li>
-                        <li>
-                            <Link to="/admin/dashboard/canchas">
-                                <span className="icon">🏟️</span> Canchas
-                            </Link>
-                        </li>
-                        <li>
-                            <Link to="/admin/dashboard/usuarios">
-                                <span className="icon">👥</span> Usuarios
-                            </Link>
-                        </li>
-                    </ul>
-                </nav>
+                <div>
+                    <h2>BogotáCup</h2>
+                    <nav>
+                        <ul>
+                            <li>
+                                <Link to="/dashboard" className="active">
+                                    <span className="icon">🏠</span> Dashboard
+                                </Link>
+                            </li>
+                            <li>
+                                <Link to="/dashboard/tournament">
+                                    <span className="icon">🏆</span> Torneos
+                                </Link>
+                            </li>
+                            <li>
+                                <Link to="/dashboard/team">
+                                    <span className="icon">🛡️</span> Equipos
+                                </Link>
+                            </li>
+                            <li>
+                                <Link to="/dashboard/player">
+                                    <span className="icon">🏃</span> Jugadores
+                                </Link>
+                            </li>
+                            <li>
+                                <Link to="/dashboard/game">
+                                    <span className="icon">⚽</span> Partidos
+                                </Link>
+                            </li>
+                            <li>
+                                <Link to="/dashboard/referee">
+                                    <span className="icon">⚖️</span> Árbitros
+                                </Link>
+                            </li>
+                            <li>
+                                <Link to="/dashboard/court">
+                                    <span className="icon">🏟️</span> Canchas
+                                </Link>
+                            </li>
+                            <li>
+                                <Link to="/dashboard/user">
+                                    <span className="icon">👥</span> Usuarios
+                                </Link>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+                <div className="sidebar-footer">
+                    <button onClick={handleLogout} className="btn-logout">
+                        <span className="icon"></span> Cerrar Sesión
+                    </button>
+                </div>
             </aside>
 
             <main className="main-content">
