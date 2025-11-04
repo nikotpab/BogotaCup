@@ -145,14 +145,10 @@ El proyecto cubre los siguientes módulos principales:
 
 ## 👥 Autores
 
-Proyecto desarrollado por el equipo académico responsable del sistema **BogotáCup**, como parte de la asignatura de **Bases de Datos / Ingeniería de Sistemas**.
+Proyecto desarrollado por Nicolas Barbosa, Laura Tao, Camyla Poveda, como parte de la asignatura de **Bases de Datos / Ingeniería de Sistemas**.
 
 ---
 
 ## 📜 Licencia
 
 Este proyecto se distribuye con fines **académicos** y **no comerciales**, bajo una licencia abierta para consulta y aprendizaje.
-
----
-
-¿Quieres que adapte este README al formato estándar de **GitHub con badges (por ejemplo: tecnologías, estado del proyecto, licencia, etc.)** para que se vea más profesional en el repositorio? Puedo generarlo en ese estilo también.
