@@ -1,70 +1,158 @@
-# Getting Started with Create React App
+# ⚽ BogotáCup – Sistema de Gestión de Torneos de Fútbol Amateur
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+**BogotáCup** es un sistema web diseñado para gestionar torneos de fútbol amateur organizados en Bogotá. Permite administrar equipos, jugadores, árbitros y partidos, así como registrar resultados y generar tablas de posiciones de forma automática.
 
-## Available Scripts
+Este proyecto forma parte de un desarrollo académico universitario, centrado en la **implementación de una base de datos relacional normalizada** y una **aplicación web funcional** conectada a ella.
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## 📋 Descripción del Proyecto
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+En las ligas de fútbol amateur, la gestión de torneos suele realizarse de forma manual o con hojas de cálculo dispersas, lo que causa pérdida de información, errores en la programación de partidos y dificultad para consultar datos históricos.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+**BogotáCup** propone una solución tecnológica que centraliza la administración de torneos, asegurando **integridad, consistencia y disponibilidad** de los datos a través de un sistema accesible vía navegador web.
 
-### `npm test`
+---
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 🎯 Objetivos
 
-### `npm run build`
+### Objetivo General
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Diseñar e implementar una **base de datos relacional normalizada** y una **aplicación web** que permita administrar torneos de fútbol amateur.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Objetivos Específicos
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+* Modelar la estructura de datos mediante **diagramas E-R (Peter Chen y Crow’s Foot)**.
+* Aplicar reglas de normalización hasta **3FN**.
+* Implementar la base de datos en **MariaDB o PostgreSQL** sobre un entorno **Linux virtualizado**.
+* Diseñar una aplicación web para registrar resultados y consultar estadísticas.
+* Elaborar un **diccionario de datos** y un conjunto de **consultas en álgebra relacional** (mínimo 10).
+* Documentar todo el proceso y mantener control de versiones mediante **GitHub**.
 
-### `npm run eject`
+---
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## 🔧 Alcance y Funcionalidades
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+El proyecto cubre los siguientes módulos principales:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+* **Gestión de Torneos:** creación, modificación y cierre de torneos.
+* **Gestión de Equipos y Jugadores:** registro de plantillas, colores y directores técnicos.
+* **Programación de Partidos:** asignación de fecha, hora, cancha y árbitro.
+* **Registro de Resultados:** ingreso de goles, tarjetas y estado del partido.
+* **Tablas de Posiciones:** generación automática según los resultados.
+* **Gestión de Usuarios:** acceso diferenciado para administradores, entrenadores y jugadores.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+📉 *No incluye en esta versión:*
 
-## Learn More
+* Estadísticas avanzadas.
+* Históricos completos.
+* Reportes gráficos.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+---
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## 🗄️ Entidades Principales
 
-### Code Splitting
+1. Torneo
+2. Equipo
+3. Jugador
+4. Partido
+5. Árbitro
+6. Cancha
+7. Resultado
+8. Usuario
+9. EstadísticaPartido
+10. Categoría
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+---
 
-### Analyzing the Bundle Size
+## 💡 Supuestos del Proyecto
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+### Supuestos Generales
 
-### Making a Progressive Web App
+* El sistema será utilizado **solo para torneos de fútbol amateur** organizados por la **Alcaldía de Bogotá**.
+* La infraestructura tecnológica (servidores, internet, acceso) será proporcionada por la Alcaldía.
+* Los usuarios tienen conocimientos básicos de informática.
+* El desarrollo sigue un **calendario académico universitario**.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+### Supuestos Funcionales
 
-### Advanced Configuration
+* Un jugador solo puede pertenecer a un equipo por torneo.
+* Un partido se juega en una única cancha en fecha y hora definidas.
+* Un árbitro puede dirigir múltiples partidos, pero no más de uno por franja horaria.
+* Los equipos pueden participar en varios torneos, pero solo una vez por torneo.
+* La base de datos soporta **torneos simultáneos** sin mezcla de datos.
+* Uso interno: administradores, entrenadores y jugadores (sin acceso público).
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+### Supuestos Técnicos
 
-### Deployment
+* Base de datos en **MariaDB o PostgreSQL** bajo entorno **Linux virtualizado**.
+* Cumplimiento de **3FN** e integridad referencial.
+* Arquitectura **cliente-servidor simple** accesible por navegador.
+* No incluye integración con sistemas externos (pagos, redes sociales, etc.).
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+---
 
-### `npm run build` fails to minify
+## 🧩 Tecnologías Utilizadas
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+* **Frontend:** HTML, CSS, JavaScript
+* **Backend:** Node.js / Express (o framework web definido en el curso)
+* **Base de Datos:** MariaDB / PostgreSQL
+* **Entorno:** Linux virtualizado
+* **Control de versiones:** Git y GitHub
+
+---
+
+## 🧠 Resultados Esperados
+
+* Base de datos relacional completa y documentada.
+* Aplicación web funcional conectada a la base de datos.
+* Documentación técnica y diccionario de datos.
+* Video demostrativo del sistema.
+* Repositorio GitHub con participación de todos los integrantes.
+
+---
+
+## 🚀 Instalación y Ejecución
+
+1. Clonar el repositorio:
+
+   ```bash
+   git clone https://github.com/nikotpab/BogotaCup.git
+   cd BogotaCup
+   ```
+
+2. Configurar la base de datos en **MariaDB o PostgreSQL** según el script SQL incluido.
+
+3. Instalar dependencias (si aplica):
+
+   ```bash
+   npm install
+   ```
+
+4. Iniciar el servidor:
+
+   ```bash
+   npm start
+   ```
+
+5. Acceder desde el navegador:
+
+   ```
+   http://localhost:3000
+   ```
+
+---
+
+## 👥 Autores
+
+Proyecto desarrollado por el equipo académico responsable del sistema **BogotáCup**, como parte de la asignatura de **Bases de Datos / Ingeniería de Sistemas**.
+
+---
+
+## 📜 Licencia
+
+Este proyecto se distribuye con fines **académicos** y **no comerciales**, bajo una licencia abierta para consulta y aprendizaje.
+
+---
+
+¿Quieres que adapte este README al formato estándar de **GitHub con badges (por ejemplo: tecnologías, estado del proyecto, licencia, etc.)** para que se vea más profesional en el repositorio? Puedo generarlo en ese estilo también.
