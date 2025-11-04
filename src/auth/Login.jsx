@@ -1,82 +1,145 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-function SignInForm() {
+function Login() {
     const navigate = useNavigate();
+    const [view, setView] = useState("login");
 
-    const [state, setState] = React.useState({
+    const [loginState, setLoginState] = useState({
         email: "",
         password: ""
     });
-    const [message, setMessage] = React.useState("");
+    const [loginMessage, setLoginMessage] = useState("");
 
-    const handleChange = evt => {
+    const [forgotState, setForgotState] = useState({
+        email: ""
+    });
+    const [forgotMessage, setForgotMessage] = useState("");
+
+    const handleLoginChange = evt => {
         const value = evt.target.value;
-        setState({
-            ...state,
+        setLoginState({
+            ...loginState,
             [evt.target.name]: value
         });
     };
 
-    const handleOnSubmit = async evt => {
+    const handleForgotChange = evt => {
+        const value = evt.target.value;
+        setForgotState({
+            ...forgotState,
+            [evt.target.name]: value
+        });
+    };
+
+    const handleLoginSubmit = async evt => {
         evt.preventDefault();
-        setMessage("Iniciando sesión...");
+        setLoginMessage("Iniciando sesión...");
 
         const loginCredentials = {
-            email: state.email,
-            password: state.password
+            email: loginState.email,
+            password: loginState.password
         };
 
         const BACKEND_URL = "http://localhost:8080/usuario/login";
 
         try {
-            const response = await axios.post(BACKEND_URL, loginCredentials, {
+            await axios.post(BACKEND_URL, loginCredentials, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
             });
 
-            navigate('/dashboard');
+            localStorage.setItem('userEmail', loginState.email);
+
+            if (loginState.email === "bogotacup@gmail.com") {
+                navigate('/dashboard');
+            } else {
+                navigate('/home');
+            }
 
         } catch (error) {
             if (error.response) {
                 const errorMsg = error.response.data.message || error.response.data || 'Correo o contraseña incorrectos';
-                setMessage(`Error: ${errorMsg}`);
+                setLoginMessage(`Error: ${errorMsg}`);
             } else if (error.request) {
-                setMessage("Error de conexión: El servidor no responde.");
+                setLoginMessage("Error de conexión: El servidor no responde.");
             } else {
-                setMessage(`Error: ${error.message}`);
+                setLoginMessage(`Error: ${error.message}`);
             }
         }
     };
 
+    const handleForgotSubmit = async evt => {
+        evt.preventDefault();
+        setForgotMessage("Enviando...");
+
+        const BACKEND_URL = "http://localhost:8080/usuario/recuperar-clave";
+
+        try {
+            await axios.post(BACKEND_URL, { email: forgotState.email });
+            setForgotMessage("Si tienes una cuenta creada, recibirás una contraseña temporal a través de tu correo.");
+        } catch (error) {
+            if (error.response) {
+                const errorMsg = error.response.data.message || error.response.data || 'No se pudo procesar la solicitud.';
+                setForgotMessage(`Error: ${errorMsg}`);
+            } else {
+                setForgotMessage("Error de conexión con el servidor.");
+            }
+        }
+    };
+
+    const renderLoginView = () => (
+        <form onSubmit={handleLoginSubmit}>
+            <h1>Bienvenidx</h1>
+            {loginMessage && <p style={{ color: loginMessage.startsWith("Error") ? 'red' : 'green' }}>{loginMessage}</p>}
+            <input
+                type="email"
+                placeholder="Correo"
+                name="email"
+                value={loginState.email}
+                onChange={handleLoginChange}
+            />
+            <input
+                type="password"
+                name="password"
+                placeholder="Contraseña"
+                value={loginState.password}
+                onChange={handleLoginChange}
+            />
+            <a href="#" onClick={(e) => { e.preventDefault(); setView("forgot"); }}>
+                ¿Olvidaste tu contraseña?
+            </a>
+            <button type="submit">Iniciar sesión</button>
+        </form>
+    );
+
+    const renderForgotView = () => (
+        <form onSubmit={handleForgotSubmit}>
+            <h1>Recuperar Contraseña</h1>
+            <p style={{ margin: '10px 0 10px' }}>Ingresa tu correo para enviar las instrucciones de recuperación.</p>
+            {forgotMessage && <p style={{ color: forgotMessage.startsWith("Error") ? 'red' : 'green' }}>{forgotMessage}</p>}
+            <input
+                type="email"
+                placeholder="Correo electrónico"
+                name="email"
+                value={forgotState.email}
+                onChange={handleForgotChange}
+            />
+            <button type="submit">Enviar</button>
+            <a href="#" onClick={(e) => { e.preventDefault(); setView("login"); }} style={{ marginTop: '15px' }}>
+                Volver a Iniciar Sesión
+            </a>
+        </form>
+    );
+
     return (
         <div className="form-container sign-in-container">
-            <form onSubmit={handleOnSubmit}>
-                <h1>Bienvenidx</h1>
-
-                {message && <p style={{ color: message.startsWith("Error") ? 'red' : 'green' }}>{message}</p>}
-
-                <input
-                    type="email"
-                    placeholder="Correo"
-                    name="email"
-                    value={state.email}
-                    onChange={handleChange}
-                />
-                <input
-                    type="password"
-                    name="password"
-                    placeholder="Contraseña"
-                    value={state.password}
-                    onChange={handleChange}
-                />
-                <a href="#">¿Olvidaste tu contraseña?</a>
-                <button type="submit">Iniciar sesión</button>
-            </form>
+            {view === "login" ? renderLoginView() : renderForgotView()}
         </div>
     );
 }
 
-export default SignInForm;
+export default Login;
+

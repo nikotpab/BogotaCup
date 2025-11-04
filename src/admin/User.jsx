@@ -3,62 +3,61 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import '../styles/Team.css';
 
-const API_URL = "http://localhost:8080/equipo";
+const API_URL = "http://localhost:8080/usuario";
 
-const equipoVacio = {
-    idEquipo: null,
+const today = new Date().toISOString().split('T')[0];
+
+const usuarioVacio = {
+    idUsuario: null,
     nombre: "",
-    directorTecnico: "",
-    colorPrimario: "#000000",
-    colorSecundario: "#FFFFFF",
+    apellido: "",
+    correo: "",
+    clave: "",
+    rol: "JUGADOR",
+    numeroCamiseta: 0,
+    fechaNacimiento: today
 };
 
-const GestionEquipos = () => {
+const GestionUsuarios = () => {
     const navigate = useNavigate();
-    document.title = 'Gestión de Equipos - BogotáCup';
+    document.title = 'Gestión de Usuarios - BogotáCup';
 
-    const [equipos, setEquipos] = useState([]);
+    const [usuarios, setUsuarios] = useState([]);
     const [mostrarFormulario, setMostrarFormulario] = useState(false);
     const [modoEdicion, setModoEdicion] = useState(false);
-    const [equipoActual, setEquipoActual] = useState(equipoVacio);
+    const [usuarioActual, setUsuarioActual] = useState(usuarioVacio);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [apiMessage, setApiMessage] = useState("");
 
-    const fetchEquipos = async () => {
+    const fetchUsuarios = async () => {
         try {
             setLoading(true);
-            const cacheBust = `_=${new Date().getTime()}`;
-            const response = await axios.get(`${API_URL}/listar?${cacheBust}`);
-
-            if (Array.isArray(response.data)) {
-                setEquipos(response.data);
-            } else {
-                setEquipos([]);
-            }
+            const response = await axios.get(`${API_URL}/listar`);
+            setUsuarios(response.data || []);
             setError(null);
         } catch (err) {
-            setError("Error al cargar los equipos. El backend puede estar inactivo.");
-            setEquipos([]);
+            setError("Error al cargar los usuarios. El backend puede estar inactivo.");
+            setUsuarios([]);
         } finally {
             setLoading(false);
         }
     };
 
     useEffect(() => {
-        fetchEquipos();
+        fetchUsuarios();
     }, []);
 
     const handleCrearClick = () => {
         setModoEdicion(false);
-        setEquipoActual(equipoVacio);
+        setUsuarioActual(usuarioVacio);
         setMostrarFormulario(true);
         setApiMessage("");
     };
 
-    const handleEditarClick = (equipo) => {
+    const handleEditarClick = (usuario) => {
         setModoEdicion(true);
-        setEquipoActual(equipo);
+        setUsuarioActual({ ...usuario, clave: "" });
         setMostrarFormulario(true);
         setApiMessage("");
     };
@@ -70,7 +69,7 @@ const GestionEquipos = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setEquipoActual(prev => ({
+        setUsuarioActual(prev => ({
             ...prev,
             [name]: value
         }));
@@ -80,51 +79,34 @@ const GestionEquipos = () => {
         e.preventDefault();
         setApiMessage("Guardando...");
 
-        const equipoPayload = {
-            idEquipo: equipoActual.idEquipo,
-            nombre: equipoActual.nombre,
-            directorTecnico: equipoActual.directorTecnico,
-            colorPrimario: equipoActual.colorPrimario,
-            colorSecundario: equipoActual.colorSecundario
-        };
+        const usuarioPayload = { ...usuarioActual };
 
-        const config = {
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        };
+        if (modoEdicion && usuarioPayload.clave === "") {
+            delete usuarioPayload.clave;
+        }
 
         try {
             if (modoEdicion) {
-                await axios.put(`${API_URL}/actualizar/${equipoPayload.idEquipo}`, equipoPayload, config);
+                await axios.put(`${API_URL}/actualizar/${usuarioPayload.idUsuario}`, usuarioPayload);
             } else {
-                await axios.post(`${API_URL}/crear`, equipoPayload, config);
+                await axios.post(`${API_URL}/crear`, usuarioPayload);
             }
             setMostrarFormulario(false);
             setApiMessage("");
-            fetchEquipos();
+            fetchUsuarios();
         } catch (err) {
-            let errorMsg = "Error al guardar el equipo.";
-            if (err.response && err.response.data) {
-                if (typeof err.response.data === 'string') {
-                    errorMsg = err.response.data;
-                } else if (err.response.data.message) {
-                    errorMsg = err.response.data.message;
-                } else {
-                    errorMsg = JSON.stringify(err.response.data);
-                }
-            }
+            const errorMsg = err.response?.data || "Error al guardar el usuario.";
             setApiMessage(`Error: ${errorMsg}`);
         }
     };
 
-    const handleEliminarClick = async (idEquipo) => {
-        if (window.confirm("¿Está seguro de eliminar este equipo?")) {
+    const handleEliminarClick = async (idUsuario) => {
+        if (window.confirm("¿Está seguro de eliminar este usuario?")) {
             try {
-                await axios.delete(`${API_URL}/eliminar/${idEquipo}`);
-                fetchEquipos();
+                await axios.delete(`${API_URL}/eliminar/${idUsuario}`);
+                fetchUsuarios();
             } catch (err) {
-                alert("Error al eliminar el equipo.");
+                alert("Error al eliminar el usuario.");
             }
         }
     };
@@ -146,7 +128,7 @@ const GestionEquipos = () => {
                             </Link>
                         </li>
                         <li>
-                            <Link to="/dashboard/team" className="active">
+                            <Link to="/dashboard/team">
                                 <span className="icon">🛡️</span> Equipos
                             </Link>
                         </li>
@@ -171,7 +153,7 @@ const GestionEquipos = () => {
                             </Link>
                         </li>
                         <li>
-                            <Link to="/dashboard/user">
+                            <Link to="/dashboard/user" className="active">
                                 <span className="icon">👥</span> Usuarios
                             </Link>
                         </li>
@@ -181,66 +163,113 @@ const GestionEquipos = () => {
 
             <main className="main-content">
                 <div className="main-header">
-                    <h2>Gestión de Equipos</h2>
+                    <h2>Gestión de Cuentas de Usuario</h2>
                     {!mostrarFormulario && (
                         <button className="btn btn-primary" onClick={handleCrearClick}>
-                            + Crear Equipo
+                            + Crear Usuario
                         </button>
                     )}
                 </div>
 
                 {mostrarFormulario && (
                     <div className="content-card">
-                        <h3>{modoEdicion ? "Editar Equipo" : "Crear Nuevo Equipo"}</h3>
+                        <h3>{modoEdicion ? "Editar Usuario" : "Crear Nuevo Usuario"}</h3>
                         <form className="form-gestion" onSubmit={handleGuardarSubmit}>
 
-                            {apiMessage && <p style={{ color: apiMessage.startsWith("Error") ? 'red' : 'green' }}>{apiMessage}</p>}
+                            {apiMessage && <p>{apiMessage}</p>}
 
                             <div className="form-group">
-                                <label htmlFor="nombre">Nombre del Equipo</label>
+                                <label htmlFor="nombre">Nombre</label>
                                 <input
                                     type="text"
                                     id="nombre"
                                     name="nombre"
-                                    value={equipoActual.nombre}
+                                    value={usuarioActual.nombre}
                                     onChange={handleChange}
                                     required
+                                    disabled={modoEdicion}
                                 />
                             </div>
 
                             <div className="form-group">
-                                <label htmlFor="directorTecnico">Director Técnico</label>
+                                <label htmlFor="apellido">Apellido</label>
                                 <input
                                     type="text"
-                                    id="directorTecnico"
-                                    name="directorTecnico"
-                                    value={equipoActual.directorTecnico}
+                                    id="apellido"
+                                    name="apellido"
+                                    value={usuarioActual.apellido}
+                                    onChange={handleChange}
+                                    required
+                                    disabled={modoEdicion}
+                                />
+                            </div>
+
+                            <div className="form-group">
+                                <label htmlFor="correo">Correo</label>
+                                <input
+                                    type="email"
+                                    id="correo"
+                                    name="correo"
+                                    value={usuarioActual.correo}
                                     onChange={handleChange}
                                     required
                                 />
                             </div>
 
                             <div className="form-group">
-                                <label htmlFor="colorPrimario">Color Primario</label>
+                                <label htmlFor="clave">Contraseña</label>
                                 <input
-                                    type="color"
-                                    id="colorPrimario"
-                                    name="colorPrimario"
-                                    value={equipoActual.colorPrimario}
+                                    type="password"
+                                    id="clave"
+                                    name="clave"
+                                    value={usuarioActual.clave}
                                     onChange={handleChange}
+                                    placeholder={modoEdicion ? "Dejar en blanco para no cambiar" : ""}
+                                    required={!modoEdicion}
                                 />
                             </div>
 
                             <div className="form-group">
-                                <label htmlFor="colorSecundario">Color Secundario</label>
-                                <input
-                                    type="color"
-                                    id="colorSecundario"
-                                    name="colorSecundario"
-                                    value={equipoActual.colorSecundario}
+                                <label htmlFor="rol">Rol</label>
+                                <select
+                                    id="rol"
+                                    name="rol"
+                                    value={usuarioActual.rol}
                                     onChange={handleChange}
-                                />
+                                >
+                                    <option value="JUGADOR">Jugador</option>
+                                    <option value="ADMIN">Admin</option>
+                                </select>
                             </div>
+
+                            {!modoEdicion && (
+                                <>
+                                    <div className="form-group">
+                                        <label htmlFor="fechaNacimiento">Fecha de Nacimiento</label>
+                                        <input
+                                            type="date"
+                                            id="fechaNacimiento"
+                                            name="fechaNacimiento"
+                                            value={usuarioActual.fechaNacimiento}
+                                            onChange={handleChange}
+                                            required
+                                            max={today}
+                                        />
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label htmlFor="numeroCamiseta">Número de Camiseta</label>
+                                        <input
+                                            type="number"
+                                            id="numeroCamiseta"
+                                            name="numeroCamiseta"
+                                            value={usuarioActual.numeroCamiseta}
+                                            onChange={handleChange}
+                                            required
+                                        />
+                                    </div>
+                                </>
+                            )}
 
                             <div className="form-actions">
                                 <button type="submit" className="btn btn-primary">
@@ -256,7 +285,7 @@ const GestionEquipos = () => {
 
                 {!mostrarFormulario && (
                     <div className="content-card">
-                        {loading && <p>Cargando equipos...</p>}
+                        {loading && <p>Cargando usuarios...</p>}
                         {error && <p style={{ color: 'red' }}>{error}</p>}
                         {!loading && !error && (
                             <div className="tabla-gestion-container">
@@ -264,42 +293,32 @@ const GestionEquipos = () => {
                                     <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>Nombre</th>
-                                        <th>Director Técnico</th>
-                                        <th>Colores</th>
+                                        <th>Correo</th>
+                                        <th>Nombre Completo</th>
+                                        <th>Contraseña</th>
+                                        <th>Rol</th>
                                         <th>Acciones</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {equipos.length > 0 ? (
-                                        equipos.map((equipo) => (
-                                            <tr key={equipo.idEquipo}>
-                                                <td>{equipo.idEquipo}</td>
-                                                <td>{equipo.nombre}</td>
-                                                <td>{equipo.directorTecnico}</td>
-                                                <td>
-                                                    <span style={{
-                                                        display: 'inline-block',
-                                                        width: '20px',
-                                                        height: '20px',
-                                                        backgroundColor: equipo.colorPrimario,
-                                                        border: `2px solid ${equipo.colorSecundario}`,
-                                                        borderRadius: '4px',
-                                                        marginRight: '8px',
-                                                        verticalAlign: 'middle'
-                                                    }}></span>
-                                                    {equipo.colorPrimario} / {equipo.colorSecundario}
-                                                </td>
+                                    {usuarios.length > 0 ? (
+                                        usuarios.map((usuario) => (
+                                            <tr key={usuario.idUsuario}>
+                                                <td>{usuario.idUsuario}</td>
+                                                <td>{usuario.correo}</td>
+                                                <td>{usuario.nombre} {usuario.apellido}</td>
+                                                <td>********</td>
+                                                <td>{usuario.rol}</td>
                                                 <td className="acciones">
                                                     <button
                                                         className="btn btn-edit"
-                                                        onClick={() => handleEditarClick(equipo)}
+                                                        onClick={() => handleEditarClick(usuario)}
                                                     >
                                                         Editar
                                                     </button>
                                                     <button
                                                         className="btn btn-danger"
-                                                        onClick={() => handleEliminarClick(equipo.idEquipo)}
+                                                        onClick={() => handleEliminarClick(usuario.idUsuario)}
                                                     >
                                                         Eliminar
                                                     </button>
@@ -308,7 +327,7 @@ const GestionEquipos = () => {
                                         ))
                                     ) : (
                                         <tr>
-                                            <td colSpan="5">No hay equipos registrados.</td>
+                                            <td colSpan="6">No hay usuarios registrados.</td>
                                         </tr>
                                     )}
                                     </tbody>
@@ -322,5 +341,4 @@ const GestionEquipos = () => {
     );
 };
 
-export default GestionEquipos;
-
+export default GestionUsuarios;

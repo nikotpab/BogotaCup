@@ -1,0 +1,357 @@
+/* --- Importación de Fuentes y Definición de Variables --- */
+@import url("https://fonts.googleapis.com/css?family=Montserrat:400,600,700,800");
+
+:root {
+    --grad-a: #ff4b2b;
+    --grad-b: #ff416c;
+    --text-1: #222;
+    --text-2: #666;
+    --bg-0: #f6f5f7;
+    --bg-1: #ffffff;
+    --card: #ffffff;
+    --muted: #dddddd;
+    --success: #2E7D32;
+    --danger: #D32F2F;
+    --success-bg: #E8F5E9;
+    --danger-bg: #FFEBEE;
+}
+
+/* --- Reseteo Básico --- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: "Montserrat", sans-serif;
+    background-color: var(--bg-0);
+    color: var(--text-1);
+    line-height: 1.6;
+}
+
+/* --- Contenedor Principal (Reutilizado) --- */
+.dashboard-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* --- Barra Lateral (Reutilizada) --- */
+.sidebar {
+    width: 260px;
+    background: var(--bg-1);
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+}
+
+.sidebar h2 {
+    font-weight: 800;
+    font-size: 22px;
+    margin-bottom: 24px;
+    background: linear-gradient(to right, var(--grad-a), var(--grad-b));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.sidebar nav ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar nav li {
+    margin-bottom: 8px;
+}
+
+.sidebar nav li a {
+    text-decoration: none;
+    color: var(--text-2);
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    padding: 12px 10px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    transition: all 0.2s ease;
+}
+
+.sidebar nav li a .icon {
+    margin-right: 12px;
+    font-size: 18px;
+    width: 20px;
+    text-align: center;
+}
+
+.sidebar nav li a:hover,
+.sidebar nav li a.active {
+    color: var(--grad-a);
+    background-color: #fff3e5;
+}
+
+/* --- Contenido Principal (Reutilizado) --- */
+.main-content {
+    flex: 1;
+    padding: 32px;
+    overflow-y: auto;
+    background-color: var(--bg-0);
+}
+
+/* --- ESTILOS DE GESTIÓN (NUEVO) --- */
+
+/* --- Cabecera de Gestión --- */
+.main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.main-header h2 {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--text-1);
+}
+
+/* --- Tarjeta de Contenido --- */
+.content-card {
+    background: var(--card);
+    border: 1px solid var(--muted);
+    border-radius: 10px;
+    padding: 24px;
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+    margin-bottom: 24px;
+}
+
+.content-card h3 {
+    margin-bottom: 20px;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-1);
+}
+
+/* --- Estilos de Botones --- */
+.btn {
+    border-radius: 20px;
+    border: 1px solid;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 10px 20px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: transform 80ms ease-in, background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    cursor: pointer;
+}
+.btn:active {
+    transform: scale(0.95);
+}
+.btn:focus {
+    outline: none;
+}
+
+.btn-primary {
+    background-color: var(--grad-a);
+    background-image: linear-gradient(to right, var(--grad-a), var(--grad-b));
+    border-color: var(--grad-a);
+    color: #FFFFFF;
+}
+.btn-primary:hover {
+    background-image: none;
+    background-color: var(--grad-b);
+}
+
+.btn-secondary {
+    background-color: transparent;
+    border-color: var(--muted);
+    color: var(--text-2);
+}
+.btn-secondary:hover {
+    background-color: var(--bg-0);
+    color: var(--text-1);
+}
+
+.btn-edit {
+    background-color: #007bff;
+    border-color: #007bff;
+    color: #FFFFFF;
+    padding: 6px 14px;
+    font-size: 11px;
+}
+.btn-edit:hover {
+    background-color: #0056b3;
+}
+
+.btn-danger {
+    background-color: var(--danger);
+    border-color: var(--danger);
+    color: #FFFFFF;
+    padding: 6px 14px;
+    font-size: 11px;
+}
+.btn-danger:hover {
+    background-color: #B71C1C;
+}
+
+.btn-success {
+    background-color: var(--success);
+    border-color: var(--success);
+    color: #FFFFFF;
+    padding: 6px 14px;
+    font-size: 11px;
+}
+.btn-success:hover {
+    background-color: #1B5E20;
+}
+
+
+/* --- Formulario de Gestión --- */
+.form-gestion {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group.form-group-full {
+    grid-column: 1 / -1;
+}
+
+.form-gestion label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-2);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+}
+
+.form-gestion input[type="text"],
+.form-gestion input[type="number"],
+.form-gestion input[type="date"],
+.form-gestion input[type="color"],
+.form-gestion select {
+    width: 100%;
+    padding: 12px 15px;
+    margin: 0;
+    background-color: var(--bg-0);
+    border: 1px solid var(--muted);
+    border-radius: 8px;
+    font-family: "Montserrat", sans-serif;
+    font-size: 14px;
+    color: var(--text-1);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-gestion input[type="color"] {
+    padding: 4px;
+    height: 47px;
+}
+
+.form-gestion input:focus,
+.form-gestion select:focus {
+    outline: none;
+    border-color: var(--grad-a);
+    box-shadow: 0 0 0 3px rgba(255, 65, 108, 0.2);
+}
+
+.form-actions {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+/* --- Tabla de Gestión --- */
+.tabla-gestion-container {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.tabla-gestion {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.tabla-gestion thead th {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-2);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    text-align: left;
+    padding: 12px 16px;
+    border-bottom: 2px solid var(--muted);
+    background-color: var(--bg-0);
+}
+
+.tabla-gestion tbody tr {
+    border-bottom: 1px solid var(--muted);
+}
+
+.tabla-gestion tbody tr:nth-of-type(even) {
+    background-color: var(--bg-0);
+}
+
+.tabla-gestion tbody tr:hover {
+    background-color: #fff3e5;
+}
+
+.tabla-gestion tbody td {
+    padding: 16px;
+    color: var(--text-1);
+    vertical-align: middle;
+}
+
+.acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.estado-activo {
+    color: var(--success);
+    background-color: var(--success-bg);
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 12px;
+}
+
+.estado-inactivo {
+    color: var(--danger);
+    background-color: var(--danger-bg);
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 12px;
+}
+
+/* --- Responsividad --- */
+@media (max-width: 768px) {
+    .dashboard-container {
+        flex-direction: column;
+    }
+    .sidebar {
+        width: 100%;
+        height: auto;
+    }
+    .main-content {
+        padding: 20px;
+    }
+    .form-gestion {
+        grid-template-columns: 1fr;
+    }
+    .main-header {
+        flex-direction: column;
+        gap: 16px;
+        align-items: flex-start;
+    }
+}
